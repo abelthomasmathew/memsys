@@ -30,13 +30,13 @@ A two-layer driver stack that lets simple requests perform real flash operations
 Caller (testbench)
         │  cmd, addr, len, wdata / rdata, start / busy / done
         ▼
-┌─────────────────────┐
-│  SPI Flash Controller │  ← knows opcodes, address framing, write-enable + status polling
-└─────────────────────┘
+┌────────────────────────┐
+│  SPI Flash Controller  │  ← knows opcodes, address framing, write-enable + status polling
+└────────────────────────┘
         │  8-bit byte, start / busy / done
         ▼
 ┌─────────────────────┐
-│     SPI Master        │  ← dumb byte shifter, Mode 0 (CPOL=0, CPHA=0)
+│     SPI Master      │  ← dumb byte shifter, Mode 0 (CPOL=0, CPHA=0)
 └─────────────────────┘
         │  SCLK / MOSI / MISO / (CS owned by Flash Controller)
         ▼
