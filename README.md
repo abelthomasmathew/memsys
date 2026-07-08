@@ -54,7 +54,7 @@ Caller (testbench)
 
 ### Key design decisions
 
-- **CS is owned by the Flash Controller, not the SPI Master** — the SPI Master has no concept of multi-byte transactions; only the layer that understands "opcode + address + data, all under one CS-low window" can correctly sequence CS.
+- **CS is owned by the Flash Controller, not the SPI Master** — the SPI Master has no concept of multi-byte transactions.
 - **`mosi` is a combinational tap on the shift register's MSB**, not a registered signal updated on a separate edge — this avoids a shift-before-drive race that corrupts the first transmitted bit.
 - **5-phase FSM** (`WEN_PHASE` → `MAIN_PHASE` → `POLL_PHASE`) is reused across all three commands via a `phase` register, rather than duplicating states per command — Program and Erase both need Write-Enable and polling; Read needs neither and skips straight to `MAIN_PHASE`.
 - **Byte-index-driven sequencing**: a single `byte_idx` counter walks through however many bytes a given phase needs (opcode, 3 address bytes, N data/dummy bytes), avoiding one dedicated state per byte.
@@ -67,12 +67,6 @@ Simulated in Vivado. The self-checking testbench:
 2. Programs 4 bytes (`0xAA 0xBB 0xCC 0xDD`) at the sector start
 3. Reads them back and checks an exact match
 4. Confirms an untouched region within the erased sector reads `0xFF` (proving Erase actually happened, not just Program)
-
-```
-*** ALL TESTS PASSED ***
-```
-
-The Erase and Program operations both took several million ns of simulated time (vs. a handful of µs for a single command's raw byte count) — confirming the Write-Enable → Command → Poll(×N) sequencing genuinely executed, rather than the FSM falling through early.
 
 <img src="doc/flash.png" width="700" alt="Simulation Result">
 
