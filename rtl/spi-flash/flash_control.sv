@@ -13,6 +13,7 @@ module flash_control #(
     output logic [PAGEBYTES*8-1:0] rdata,
     output logic busy, done,
 
+    // for the flash memory
     input logic miso,
     output logic sclk, mosi, cs
 );
