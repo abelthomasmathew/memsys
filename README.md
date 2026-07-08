@@ -10,13 +10,12 @@ Two independent, verified building blocks of a hardware memory subsystem, writte
 ## Repo structure
 
 ```
-axi-memsys/
+memsys/
 ├── rtl/
-│   ├── spi/            spi_master.sv, spi_flash_ctrl.sv
-│   ├── axi/             axi4_master.sv
-│   └── cache/           cache_nway.sv
+│   ├── spi-flash/             spi_master.sv, flash_control.sv, flash_model.sv
+│   └── axi-cache/             axi4_master.sv, cache_nway.sv
 ├── sim/
-│   └── spi/             flash_model_bfm.sv, tb_flash_control.sv
+│   └──                        tb_flash.sv
 └── README.md
 ```
 ---
