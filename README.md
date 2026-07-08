@@ -1,3 +1,5 @@
+![Language](https://img.shields.io/badge/Language-SystemVerilog-blue)
+
 # Memory Subsystem — SPI Flash Controller + Cached AXI4 Memory Path
 
 Two independent, verified building blocks of a hardware memory subsystem, written in SystemVerilog:
@@ -50,7 +52,7 @@ Caller (testbench)
 | `rtl/spi-flash/spi_master.sv` | Byte-level SPI Mode 0 master. Configurable clock divider (`SPIFREQ`/`CLKFREQ` parameters), parameterized word width `N`. Acts like a pure shift-register engine. |
 | `rtl/spi-flash/spi_flash_control.sv` | Command sequencer on top of the SPI Master. Implements Read, Page Program, and Sector Erase, including the mandatory Write-Enable (`0x06`) prefix and Read-Status-Register (`0x05`) busy-polling loop required before/after any write or erase. |
 | `sim/spi-flash/flash_model.sv` | Behavioral flash-chip model for simulation (not synthesizable) — stands in for a real W25Q-style chip, responding to opcodes with a backing byte array. |
-| `sim/tb_flash.sv` | Self-checking testbench: erase → program → read-back → verify, plus a check that untouched erased memory reads `0xFF`. |
+| `sim/tb_flash.sv` | Self-checking testbench: erase → program → read-back → verify, plus checks that untouched erased memory reads `0xFF`. |
 
 ### Key design decisions
 
