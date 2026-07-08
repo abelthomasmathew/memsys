@@ -1,5 +1,7 @@
 module flash_model #(
-    parameter MEMSIZE = 4096 
+    parameter MEMSIZE = 4096,
+    parameter int POLLS = 3,     // how many times should status poll be 1 before its set to 0
+    parameter int SECTORSIZE = 512
 )(
     input logic sclk, mosi, cs,
     output logic miso
@@ -25,13 +27,13 @@ module flash_model #(
     int wip_countdown;
     int sector_base;
     
-    always @(negedge cs) begin
+    always_ff @(negedge cs) begin
         bitcount <= 0;
         bytecount <= 0;
         rxshift <= 8'h00;
     end
 
-    always @(posedge sclk) begin
+    always_ff @(posedge sclk) begin
         if (!cs) begin
             rxbyte = {rxshift[6:0], mosi};
 
@@ -59,6 +61,27 @@ module flash_model #(
                 rxshift <= rxbyte;
                 bitcount <= bitcount + 1;
             end
+        end
+    end
+
+    always_ff @(posedge cs) begin
+        if (opcode == 8'h02 && wen_done) begin      // Page program
+            wip <= 1'b1;
+            wip_countdown <= POLLS;
+            wen_done <= 1'b0;
+        end
+        else if (opcode == 8'h20 && wen_done) begin  // sector erase
+            sector_base = (addr_reg / SECTORSIZE) * SECTORSIZE;
+            for (int i = 0; i < SECTORSIZE; i++) begin
+                flash[(sector_base + i) % MEMSIZE] <= 8'hff;
+            end
+            wip <= 1'b1;
+            wip_countdown <= POLLS;
+            wen_done <= 1'b0;
+        end
+        else if (opcode == 8'h05 && wip) begin
+            if (wip_countdown == 0) wip <= 1'b0;
+            else wip_countdown <= wip_countdown - 1;
         end
     end
 
