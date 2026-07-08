@@ -79,7 +79,7 @@ module flash_model #(
             wip_countdown <= POLLS;
             wen_done <= 1'b0;
         end
-        else if (opcode == 8'h05 && wip) begin
+        else if (opcode == 8'h05 && wip) begin      // polling
             if (wip_countdown == 0) wip <= 1'b0;
             else wip_countdown <= wip_countdown - 1;
         end
