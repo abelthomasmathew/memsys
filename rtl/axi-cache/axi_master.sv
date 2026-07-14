@@ -64,7 +64,7 @@ module axi_master #(
 
     logic [7:0] totalbursts;    // len latched
     logic [7:0] burstcount;
-    logic [7:0] resp_latch;
+    logic [1:0] resp_latch;
 
     always_ff @(posedge clk or posedge areset) begin
         if (areset) begin
@@ -160,7 +160,7 @@ module axi_master #(
     assign wvalid = (state == W) && cwvalid;
     assign cwready = (state == W) && wready;
     assign wdata = cwdata;
-    assign wstrb = cwstrb;
+    assign wstrb = strb;
     assign wlast = (burstcount == totalbursts);
 
     assign rready = (state == R) && crready;
