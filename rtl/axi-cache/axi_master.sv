@@ -70,12 +70,8 @@ module axi_master #(
         if (areset) begin
             state <= IDLE;
             arvalid <= 1'b0;
-            rready <= 1'b0;
             awvalid <= 1'b0;
-            wvalid <= 1'b0;
             bready <= 1'b0;
-            cwready <= 1'b0;
-            crvalid <= 1'b0;
             done <= 1'b0;
             burstcount <= '0;
             resp_latch <= 2'b00;
