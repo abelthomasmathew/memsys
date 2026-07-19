@@ -138,6 +138,7 @@ module cache #(
         else begin
             resp_valid <= 1'b0;
             start <= 1'b0;
+            hit <= 1'b0;
             case (state)
                 IDLE : begin
                     if (req_valid) begin
